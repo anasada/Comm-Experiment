@@ -6,9 +6,7 @@ document.write(
 // 5 main maps * 16 combinations of the conditions
 const eachTimes = 5;        // 8 maps are categorized into 5 groups based on distances from rewards
 const amountCondition = 16; // (2 pointers x 2 hammers x 2 walls x 2 rewards) = 16 combos
-// const amountTrials = amountCondition * eachTimes; // each map group does each combo (16 * 5)
-
-const amountTrials =4; //delete!!
+const amountTrials = amountCondition * eachTimes; // each map group does each combo (16 * 5)
 
 // Conditions
 var numbTokensFull = 1; // 1 or 2 selections
