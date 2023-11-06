@@ -443,8 +443,6 @@ $(document).ready(function() {
             strategy: $("#strategy").val(),
             problems: $("#problems").val()
 		};
-
-        console.log(formData)
         
 		$.post(
             $('#data_container').attr('action'),
