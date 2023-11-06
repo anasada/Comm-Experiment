@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Sender's version-->
+		<meta charset="utf-8">
+		<title>Communications Experiment</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="style.css">
+		<script src="instructions.js"></script>
+	</head>
+	
+	<body>
+
+		<!--==========Instructions==========-->
+		<div id="instrPage">
+		    <div id="instrBox">
+		        <p></p>
+				<iframe id="consent" src="2023_informedConsent.pdf"></iframe>
+		        <p id="instrText"></p>
+				<div class="pageBox" id="instrQBox1">
+		            <p id="instrQText1">Halfway point! Let’s test your understanding so far.<br><br>Which of the following is <b>NOT correct</b>?</p>
+		            <div id="quizBox">
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You will both receive the same amount of points.</div></div></label>
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView"><div class="optionText">The Player (your partner) can see the boxes but cannot see what items are inside them.</div></div></label>
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">Your partner can move diagonally inside the map.</div></div></label>
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">If your partner collects bananas, you will GAIN points. If they collect scorpions, you will LOSE points.</div></div></label>
+		            </div>
+		            <div class='warning' id='instrQWarning1'></div>
+		            <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
+		        </div>
+		        <div class="pageBox" id="instrQBox2">
+		            <p id="instrQText2">We’re just about to begin! Let's make sure you understand the game first.<br><br>Which of the following is <b>NOT correct</b>?</p>
+		            <div id="quizBox">
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="checkDist"><div class="optionText">You will help your partner gain and avoid losing points for both of you by pointing to the boxes.</div></div></label>
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="sigView"><div class="optionText">If you have 2 pointers, you can still choose to point to just 1 box.</div></div></label>
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">Sometimes, your partner will know how many bananas and scorpions are present.</div></div></label>
+		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">The boxes that you select directly represent the points that you will gain.</div></div></label>
+		            </div>
+		            <div class='warning' id='instrQWarning2'></div>
+		            <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
+		        </div>
+		        <p id="instrText"></p>
+		        <button class="butNext" id="instrNextBut" onclick="instr.next()" hidden>NEXT</button>
+		        <button class="butNext" id="instrBackBut" onclick="instr.back()" hidden>BACK</button>
+		    </div>
+
+			<div id="windowBoxInstr" style="display: none;">
+				<div id="namingDisplay" class="resultBox">
+					<p id="askName">Before starting the experiment, please give your prefered username that's at least 3 characters in length. <br>This will only be used to distinguish you from other participants.</p>
+					<input type="text" id="username" name="username" autocomplete="off">
+					<button class="butNext" id="namingBut" onclick="namingFunc()">Confirm</button>
+				</div>
+			</div>
+		</div>
+
+
+
+		<!--==========Practice Rounds==========-->
+		
+		<div class="pageBox" id="practicePage">
+			<p id="pleasePointPrac" hidden>Click on the box(es) that you wish to highlight for your partner.</p>
+			<p id="ifWallPrac"></p>
+			<div id = "playerItem">
+				<p id="partnerItems">Player’s Items: <canvas class = "conditionsGrid" id="canvItemsPrac" width="200" height="100"></canvas></p>
+			</div>
+			<div id = "helperItem">
+				<p id="yourItems">Your Items: <canvas class = "conditionsGrid" id="canvConfigsPrac" width="200" height = "100"></canvas></p>
+			</div>
+			<div class = "canvContainerPrac">
+				<canvas id="myGridPrac" width="500" height="500" ></canvas>
+			</div>
+			<button class = "butBackExp" id = "resetBoxPrac" onclick="resetMapPrac()" >Clear Selections</button> 
+			<button class = "butNextExp" id = "confirmPrac" onclick="confirmPrac()">Confirm Selection</button> 
+		</div>
+
+			
+		<div id="windowBoxPrac" style="display: none;">
+			<div id="resultRatePrac" class="resultBox">
+			    <p style = "text-align: center">How confident are you that they will understand what path to take?</p>
+			    <div style = "margin-left: -100px;">
+			        <ul style = "font-size:14px; text-align: center" class="likert">
+			            <li class="likert"> Not So Confident <input id="ConfStartPractice" type="radio" name="ConfidenceScale" value="1" />
+			            <li class="likert"><input type="radio" name="ConfidenceScale" value="2" />
+			            <li class="likert"><input type="radio" name="ConfidenceScale" value="3" />
+			            <li class="likert"><input type="radio" name="ConfidenceScale" value="4" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="5" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="6" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="7" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="8" />
+			            <li class="likert"><input id="ConfEndPractice" type="radio" name="ConfidenceScale" value="9" /> Very Confident
+			        </ul>
+			    </div>
+				<div id="rt_labelPrac">1  2  3  4  5  6  7  8  9</div>
+				
+			    <p id = "rating_next"><br><br>Feel free to pause here and take a break before moving on.</p>
+				<button class = "confNext" id = "ConfirmPrac" onclick="postConfirmPrac()" hidden>CONFIRM</button>
+			</div> 
+		</div>
+
+
+
+		<!--==========Formal Experiments==========-->
+		<div class="pageBox" id="formalPage">
+			<p id="pleasePoint" hidden>Click on the box(es) that you wish to highlight for your partner.</p>
+			<p id="ifWall"></p>
+			<div id = "playerItem">
+				<p id="partnerItems">Player’s Items: <canvas class = "conditionsGrid" id="canvItems" width="200" height="100"></canvas></p>
+			</div>
+			<div id = "helperItem">
+				<p id="yourItems">Your Items: <canvas class = "conditionsGrid" id="canvConfigs" width="200" height = "100"></canvas></p>
+			</div>
+			<div class = "canvContainer">
+				<canvas id="myGrid" width="500" height="500" ></canvas>
+			</div>
+			<button class = "butBackExp" id = "resetBox" onclick="resetMap()" >Clear Selections</button> 
+			<button class = "butNextExp" id = "confirm"  onclick="confirm()"  >Confirm Selection</button> 
+		</div>
+
+		<div id="windowBox" style="display: none;">
+			<div id="resultRate" class="resultBox">
+			    <p style = "text-align: center">How confident are you that they will understand what path to take?</p>
+				
+			    <div style = "margin-left: -100px;">
+			        <ul style = "font-size:14px; text-align: center" class="likert">
+			            <li class="likert"> Not So Confident <input id="ConfStart" type="radio" name="ConfidenceScale" value="1" />
+			            <li class="likert"><input type="radio" name="ConfidenceScale" value="2" />
+			            <li class="likert"><input type="radio" name="ConfidenceScale" value="3" />
+			            <li class="likert"><input type="radio" name="ConfidenceScale" value="4" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="5" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="6" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="7" />
+						<li class="likert"><input type="radio" name="ConfidenceScale" value="8" />
+			            <li class="likert"><input id="ConfEnd" type="radio" name="ConfidenceScale" value="9" /> Very Confident
+			        </ul>
+			    </div>
+				<div id="rt_label">1  2  3  4  5  6  7  8  9</div>
+				
+			    <p id = "rating_next"><br><br>Feel free to pause here and take a break before moving on.</p>
+				<button class = "confNext" id = "Confirm" onclick="postConfirm()" hidden>CONFIRM</button>
+			</div> 
+		</div>
+
+		
+		<div id="attentionCheck" style="display: none;">
+			<p class = "hugeText">Press the NEXT button within 5 seconds!</p>
+			<button class = "attendNext" onclick="afterAttend()">NEXT</button>
+		</div>
+
+
+		<form style="display:none" method="post" action="connect.php" id="data_container">
+			<input type="text" id="map_num" name="map_num">
+			<input type="text" id="version" name="version">
+			<input type="text" id="rewards" name="reward">
+			<input type="text" id="tokens" name="tokens">
+			<input type="text" id="hammers" name="hammers">
+			<input type="text" id="walls" name="walls">
+			<input type="text" id="point_to" name="signal">
+			<input type="text" id="conf_rating" name="conf_rating">
+			<input type="text" id="attention_rt" name="attention_rt">
+		</form>
+
+
+
+		<!--======== DEBRIEFING QUESTION ========-->
+		<div class='pageBox' id='questionsBox'>
+		    <p>Did you complete this experiment seriously throughout (without randomly responding)?</p>
+		    <div class='smallDimText'>(You will receive your compensation regardless what your answer is here. Please be honest for science!)</div>
+		    <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='F' /><div class='optionText'>No, I didn't.</div></div></label>
+		    <label><div class="option"><input class='optionRadio' type='radio' name='serious' value='T' /><div class='optionText'>Yes, I did.</div></div></label>
+		    <br><br>
+		    <p>What was the your strategy for solving this task?</p>
+		    <textarea id='strategy' name="debQ" rows="3"></textarea>
+		    <br><br><br>
+		    <p>Was any part of the procedure unclear? Did you have any technical difficulty completing any of the tasks?</p>
+		    <textarea id='problems' name="debQ" rows="3"></textarea>
+		    <br><br>
+		
+		    <button class='butNext' onclick='SUBMIT_DEBRIEFING_Q()'>SUBMIT</button>
+		</div>
+		<div class="pageBox" id="uidPage">
+		    <p id="uidText"></p>
+		    <div class='smallDimText'>(This will only be used to send you the money bonus. You will not be identified, and your responses throughout the experiment will not be attached to any of your personal information.)</div>
+		    <p>UID:</p>
+		    <textarea id='uid' name="uid" rows="1"></textarea>
+		    <br><br>
+		    <p>Email:</p>
+		    <textarea id='email' name="email" rows="1"></textarea>
+		    <br><br>
+		    <button class='butNext' onclick='SUBMIT_UID()'>SUBMIT</button>
+		</div>
+		<div class="pageBox" id="lastPage">
+		    <div id="lastPageBox">
+		        <p>You have completed the experiment. Thank you so much for your time and effort!</p>
+		        <!-- <br>
+		        <p>Please click on "NEXT" to end the experiment.</p>
+		        <br>
+		        <button class='butNext' onclick='END_TO_SONA()'>NEXT</button> -->
+		    </div>
+		</div>
+		
+		
+		<!--==========THANK YOU==========-->
+		<div class="pageBox" id="thankPage">
+		    <p id="thankText">Thank you for completing this experiment!</p>
+		</div>
+		
+		<div id="path_container" hidden>empty</div>
+
+
+		
+		
+		<p id="Response"></p>
+
+		<script src="practice.js"></script>
+		<script src="newsetup.js"></script>
+		<script src="full_exp.js"></script>
+	</body>
+</html>

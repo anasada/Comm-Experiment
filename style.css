@@ -1,0 +1,333 @@
+html,body{
+	background-color: whitesmoke;
+	background-size: cover;
+	font-family: "Open Sans", sans-serif;
+	font-family: "Work Sans", sans-serif;
+	font-size: 20px;
+	line-height: 40px;
+}
+	
+
+canvas{
+    position: relative;
+    margin: auto;
+}
+
+.conditionsGrid{
+    top: 50px;
+}
+
+#myGridPrac, #myGrid {
+    padding: 0;
+    margin-top: -250px;
+    display: block;
+    width: 600px;
+}
+
+#canvConfigsPrac, #canvConfigs {
+    margin-left: 30px;
+}
+
+/* #helperItem {
+    margin-top: 300px;
+} */
+
+
+
+
+#instrText, #thankText {
+    display: block;
+    position: absolute;
+}
+
+#instrNextBut, #lastPage button {
+    position: absolute;
+    display: inline-block;
+    right: 60px;
+    top: 600px;
+}
+#instrBackBut {
+    position: absolute;
+    display: inline-block;
+    left: 60px;
+    top: 600px
+}
+
+.butNext, .butExpt{
+    background-color: #f0eb91;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+}
+.butNext:hover{
+    background: #625757;
+    color: #f9f9f9;
+}
+.butNext:active{
+    box-shadow: 0px 0px rgba(0, 0, 0, 0.25);
+    border: none;
+}
+
+.butNextExp{
+    background-color: #f0eb91;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    position: absolute;
+    /* display: inline-block; */
+    right: 60px;
+    top: 700px;
+}
+
+.butBackExp{
+    background-color: #f0eb91;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    position: absolute;
+    /* display: inline-block; */
+    left: 60px;
+    top: 700px
+}
+
+.butNextRed{
+    background-color: #f0a291;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
+
+.confNext{
+    background-color: #f0eb91;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin-left: 300px;
+}
+
+.attendNext{
+    background-color: #f0eb91;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: auto;
+}
+
+
+
+.pageBox{
+    position:relative;
+    display: none;
+}
+
+#exptBox, #exptBoxPrac, #windowBox, #windowBoxPrac, #windowBoxInstr{
+    position: absolute;
+    width: 1000px;
+	height: 800px;
+    left: 50%;
+    transform: translate(-50%, 0px);
+    top: 50px;
+}
+
+.resultBox{
+    display: none;
+    position: absolute;
+    /* padding: 40px; */
+    padding-left: 60px;
+    padding-right: 60px;
+    background: rgba(98, 87, 87, 0.95);
+    top: 120px;
+    left: 50%;
+	width: 400px;
+    transform: translate(-50%, 0px);
+    color: #F9F9F9;
+}
+#resultRate, #resultRatePrac{
+	display: none;
+}
+
+.inResultTxt, #resultText, #resultTextPrac{
+    text-align: center;
+    margin-bottom: 50px;
+}
+#resultText b, #resultTextPrac b{
+	color: orangered;
+}
+
+
+
+
+.likert ul{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}	
+.likert li{
+	float: left;
+	text-align: left;
+	list-style-type: none;
+	padding: 3px;
+}
+#rt_label, #rt_labelPrac{
+	position: absolute;
+	margin-top: 20px;
+	margin-left: 61px;
+	font-size: 15px;
+	word-spacing: 0.38cm;
+	pointer-events: none;
+}
+
+
+
+
+
+
+.inlineShape {
+    position: relative;
+    height: 40px;
+    top: 5px;
+    padding: 0px;
+}
+
+.bananaShape {
+    position: relative;
+    top: 10px;
+    left: -5px;
+    height: 50px;
+    padding: 0px;
+}
+
+.hamShape {
+    position: relative;
+    top: 0px;
+    height: 80px;
+    padding: 0px;
+}
+
+.outlineShape {
+    margin: auto;
+    display: inline-block;
+    height: 350px;
+    padding-left: 20px;
+}
+
+.outlineShapeHand {
+    display: inline-block;
+    height: 85px;
+    padding-left: 150px;
+    padding-top: 150px;
+}
+
+.outlineShapeLonely {
+    position: relative;
+    margin: auto;
+    display: block;
+    height: 380px;
+    padding-left: 0px;
+    top: -200px;
+}
+
+.outlineShapeBuddies {
+    margin: auto;
+    position: relative;
+    display: block;
+    height: 350px;
+    text-align: center;
+    padding: 10px;
+}
+
+.outlineBlock{
+    margin: auto;
+    display: block;
+    padding-left: 40px;
+}
+
+.red {
+    color: red;
+}
+
+.rwdText {
+    color:rgba(160, 6, 62, 0.88)
+}
+
+.punishText {
+    color:rgba(44, 44, 237, 0.649)
+}
+
+
+
+
+#consent {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 400px;
+    left: 50%;
+    transform: translate(-50%, 10px);
+    margin-bottom: 20px;
+}
+
+#quizBox {
+    /*background-color: aliceblue;*/
+    border-color: #625757;
+    border-style: solid;
+    border-width: 1px;
+    color: black;
+    margin: 0px auto;
+    /* padding: 10px; */
+}
+
+
+
+.option {
+    position: relative;
+    margin: auto;
+    padding: 5px;
+    /* padding: 10px; */
+    /*text-align: justify;*/
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: gray;
+}
+
+.optionRadio {
+    position: absolute;
+    margin: 0;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.optionText {
+    position: relative;
+    left: 40px;
+    width: calc(100% - 60px);
+}
+
+.hugeText{
+    text-align: center;
+    font-size: 40px;
+}
