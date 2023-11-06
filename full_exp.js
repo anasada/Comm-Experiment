@@ -253,12 +253,12 @@ function generateMap(){
 	if (mapNumber == 1 || mapNumber == 3 || mapNumber == 5) {
 
 		// Box locations: originally
-		p1_x0 = square_size * 3;
+		p1_x0 = 0;
 		p1_y0 = square_size * 4;
-		p2_x0 = 0;
-		p2_y0 = square_size * 4;
-		p3_x0 = square_size * 2;
-		p3_y0 = 0;
+		p2_x0 = square_size * 2;
+		p2_y0 = 0;
+		p3_x0 = square_size * 3;
+		p3_y0 = square_size * 4;
 
 		// Box locations: flipped
 		f1_x0 = square_size;
@@ -1408,4 +1408,3 @@ function namingFunc(){
 
 	// check if used before??
 }
-
