@@ -210,6 +210,7 @@ function generateMap(){
 	}
 
 	// Add to dataset
+	document.getElementById("trial_num").value = counter+1;
 	document.getElementById("map_num").value = mapNumber;
 	document.getElementById("rewards").value = rewardNumber;
 	document.getElementById("tokens").value  = tokenNumberFull;
