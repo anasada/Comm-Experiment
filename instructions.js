@@ -386,6 +386,7 @@ function SUBMIT_DEBRIEFING_Q() {
 
         // don't want to repeat the same values as last trial
         $("#map_num").val(100); //too high so that it's noticable as nondata
+        $("#trial_num").val(100);
         $("#version").val(100);
 		$("#rewards").val(100);
         $("#tokens").val(100);
@@ -431,6 +432,7 @@ $(document).ready(function() {
         
 		var formData = {
 			username: $("#username").val(),
+            trial_num: $("#trial_num").val(),
 		    map_num: $("#map_num").val(),
             version: $("#version").val(),
 		    rewards: $("#rewards").val(),
