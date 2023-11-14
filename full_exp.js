@@ -1,3 +1,5 @@
+//////SPECIFIC TO THE FULL EXPERIMENT
+
 document.write(
     unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E")
   );
@@ -102,100 +104,154 @@ for(var i = 0; i < amountTrials; i++){
 	map++;
 	j++;
 }
-
-
-// Shuffling function that keeps the values in the arrays together
-function shuffle(array) {
-	// trials shown in different random order for each participant
-	let currentIndex = array.length,  randomIndex;
-  
-	// While there remain elements to shuffle.
-	while (currentIndex != 0) {
-  
-	  // Pick a remaining element.
-	  randomIndex = Math.floor(Math.random() * currentIndex);
-	  currentIndex--;
-  
-	  // And swap it with the current element.
-	  [array[currentIndex], array[randomIndex]] = [
-		array[randomIndex], array[currentIndex]];
-	}
-  
-	return array;
-  }
-  
 shuffle(trials);
 
-// Function to get random number
-function getRandomInt(max) {
-	return Math.floor(Math.random() * max);
-}
-
-// Function to rotate maps certain degrees
-function rotateMap(x, y, degrees){
-
-	// Assign x' and y'
-	if (x==0){                 var x_m = square_size*4;}
-	else if (x==square_size){  var x_m = square_size*3;}
-	else if (x==square_size*2){var x_m = square_size*2;}
-	else if (x==square_size*3){var x_m = square_size*1;}
-	else if (x==square_size*4){var x_m = 0;}
-
-	if (y==0){                 var y_m = square_size*4;}
-	else if (y==square_size){  var y_m = square_size*3;}
-	else if (y==square_size*2){var y_m = square_size*2;}
-	else if (y==square_size*3){var y_m = square_size*1;}
-	else if (y==square_size*4){var y_m = 0;}
-
-	// Returns the new (x, y) coordinates 
-	if (degrees == 90){
-		return [y_m, x];
-	}
-	else if (degrees == 180){
-		return [x_m, y_m];
-	}
-	else if (degrees == 270){
-		return [y, x_m];
-	}
-	
-}
 
 
-///// 8 maps; different tile placements and distances from player
 var ctx = document.getElementById("myGrid").getContext("2d"); //canvas
+var counter = -1 // starts at -1 for each participant
 var vers = 0; // declare so global
+var start_time = 0; // for RT
 
-// Each time clicks next, generates different map
-var counter = -1 // starts at -1 for each user
-function generateMap(){
 
-	/// Setup for each trial:
-	// Reset instructions 
-    document.getElementById("pleasePoint").innerHTML = "Click on the box(es) that you wish to highlight for your partner.";
-    document.getElementById("pleasePoint").style.color = "black";
+/// Start animation
+async function drawMovement() {
 
-    clickIndex = 0; // reset every trial (for purplePoint)
-    confirmIndex  = 0;
-	zeroIndex = 0;
-
-	// Can't click anything yet
-	document.getElementById("confirm").hidden = false;
-	document.getElementById("resetBox").hidden = false;
-
-	// Reomve  confidence rating question
+	// Remove  confidence rating question
 	var windBox = document.getElementById("windowBox");
 	windBox.style.display = "none";
 	var resBox = document.getElementById("resultRate");
 	resBox.style.display = "none";
 
+	// Clear cond canvases
+	ctxHammer.clearRect(0, 0, 300, 100); 
+	ctxHand.clearRect(  0, 0, 300, 100); 
+	ctxWall.clearRect(  0, 0, 300, 100); 
 
-	// Adjust counter, maps, configurations
+	// Put instructions line so map doesn't move
+	document.getElementById("pleasePoint").innerHTML = "Your partner is entering the map. . .";
+    document.getElementById("pleasePoint").style.color = "black";
+
+	// Update global counter
 	counter++
 	if (counter > trials.length){
 		return 
 	}
+
+	// Find map number on
+	var mapNumber = trials[counter][0]; 
+
+
+
+	// Assign version from now
+	vers = getRandomInt(8); // randomly generates number from 0-7 for rotations (creates variety)
+
+
+	// Set animation positions for each map: array of tiles will walk on (including mirrored versions)
+	if (mapNumber == 1) {
+		walkIn  = [[square_size*2, square_size*2], [square_size*2, square_size*3], [square_size*2, square_size*4]];
+		walkInM = [[square_size*2, square_size*2], [square_size*2, square_size*3], [square_size*2, square_size*4]];
+	}
+	else if (mapNumber == 2) {
+		walkIn  = [[square_size*4, square_size*4], [square_size*3, square_size*4], [square_size*2, square_size*4]];
+		walkInM = [[square_size*0, square_size*4], [square_size*1, square_size*4], [square_size*2, square_size*4]];
+	}
+	else if (mapNumber == 3) {
+		walkIn  = [[square_size*0, square_size*2], [square_size*0, square_size*1], [square_size*0, square_size*0]];
+		walkInM = [[square_size*4, square_size*2], [square_size*4, square_size*1], [square_size*4, square_size*0]];
+	}
+	else if (mapNumber == 4) {
+		walkIn  = [[square_size*4, square_size*4], [square_size*4, square_size*3], [square_size*4, square_size*2]];
+		walkInM = [[square_size*0, square_size*4], [square_size*0, square_size*3], [square_size*0, square_size*2]];
+	}
+	else if (mapNumber == 5) {
+		walkIn  = [[square_size*1, square_size*2], [square_size*1, square_size*3], [square_size*1, square_size*4]];
+		walkInM = [[square_size*3, square_size*2], [square_size*3, square_size*3], [square_size*3, square_size*4]];
+	}
+	else if (mapNumber == 6) {
+		walkIn  = [[square_size*3, square_size*3], [square_size*3, square_size*4], [square_size*4, square_size*4]];
+		walkInM = [[square_size*1, square_size*3], [square_size*1, square_size*4], [square_size*0, square_size*4]];
+	}
+	else if (mapNumber == 7) {
+		walkIn  = [[square_size*1, square_size*4], [square_size*2, square_size*4], [square_size*2, square_size*3]];
+		walkInM = [[square_size*3, square_size*4], [square_size*2, square_size*4], [square_size*2, square_size*3]];
+	}
+	else if (mapNumber == 8) {
+		walkIn  = [[square_size*3, square_size*4], [square_size*2, square_size*4], [square_size*2, square_size*3]];
+		walkInM = [[square_size*1, square_size*4], [square_size*2, square_size*4], [square_size*2, square_size*3]];
+	}
+
+	// Adjust per rotations
+	var temp  = walkIn;
+	var tempM = walkInM;
+	if (vers == 1){ // vers == 0: 0G
+		// 90G
+		walkIn = [rotateMap(temp[0][0], temp[0][1], 90), rotateMap(temp[1][0], temp[1][1], 90), rotateMap(temp[2][0], temp[2][1], 90)];
+	}
+	else if (vers == 2){
+		// 180G
+		walkIn = [rotateMap(temp[0][0], temp[0][1], 180), rotateMap(temp[1][0], temp[1][1], 180), rotateMap(temp[2][0], temp[2][1], 180)];
+	}
+	else if (vers == 3){ 
+		// 270G
+		walkIn = [rotateMap(temp[0][0], temp[0][1], 270), rotateMap(temp[1][0], temp[1][1], 270), rotateMap(temp[2][0], temp[2][1], 270)];
+	}
+	else if (vers == 4){
+		// 0F
+		walkIn = walkInM;
+	}
+	else if (vers == 5){ 
+		// 90F
+		walkIn = [rotateMap(tempM[0][0], tempM[0][1], 90), rotateMap(tempM[1][0], tempM[1][1], 90), rotateMap(tempM[2][0], tempM[2][1], 90)];
+	}
+	else if (vers == 6){
+		// 180F
+		walkIn = [rotateMap(tempM[0][0], tempM[0][1], 180), rotateMap(tempM[1][0], tempM[1][1], 180), rotateMap(tempM[2][0], tempM[2][1], 180)];
+	}
+	else if (vers == 7){
+		// 270F
+		walkIn = [rotateMap(tempM[0][0], tempM[0][1], 270), rotateMap(tempM[1][0], tempM[1][1], 270), rotateMap(tempM[2][0], tempM[2][1], 270)];
+	}
+
+	
+	// Create animation
+	var space     = 3; // number of spaces will walk
+	var countWalk = 0; // counter for tile positions array
+	while (space>0){
+		// Redraw canvas, draw Player, delay, redo
+		rawCanvas(ctx);
+		ctx.drawImage(playerMove, walkIn[countWalk][0]+30, walkIn[countWalk][1]+20, player_size-20, player_size);
+		await sleep(500);
+		space -= 1;
+		countWalk++;
+	}
+
+	// Once finished walking amount of spaces, show boxes and watch for clicks
+	generateMap();
+}
+
+
+
+// Each time clicks next, generates different map
+function generateMap(){
+
+	/// Setup for each trial:
+
+	// Bring buttons back
+	document.getElementById("resetBox").hidden = false;
+	document.getElementById("confirm").hidden  = false;
+
+	// Reset instructions 
+    document.getElementById("pleasePoint").innerHTML = "Click on the box(es) that you wish to highlight for your partner.";
+    document.getElementById("pleasePoint").style.color = "black";
+
+	// Reset counters need for each trial (for purplePoint)
+    clickIndex = 0; 
+    confirmIndex  = 0;
+	zeroIndex = 0;
+
+	// Find conditions
 	var mapNumber         = trials[counter][0]; // a number from 1-8
-	//var itemsConfigFull   = trials[counter][1]; // an array of 2 ones and 1 two
 	var tokenNumberFull   = trials[counter][1][0]; // either 1 or 2
 	var axNumberFull      = trials[counter][1][1]; // either 1 or 2
 	var ifWallFull        = trials[counter][1][2]; // either 0 or 1
@@ -217,27 +273,18 @@ function generateMap(){
 	document.getElementById("hammers").value = axNumberFull;
 	document.getElementById("walls").value   = ifWallFull;
 
-	// Clear canvas each time gen map 
-	ctx.clearRect(0, 0, w, w); 
 	
-	// Fill in canvas based on if there is a wall or not
-	if (ifWallFull == 0){
-		// light blue == partner knows
-		document.getElementById("ifWall").innerHTML = "<b>Your partner KNOWS the number of bananas and scorpions that are here.</b>";
-		ctx.fillStyle = "#dde7f0";
+	// Fill in cond canvas based on if there is a wall or not
+	if (ifWallFull == 1){
+		drawQuestion(ctxWall, 0, 0)
+		drawQuestion(ctxWall, square_size, 0)
+		drawQuestion(ctxWall, square_size*2, 0)
 	}
-	else {
-		// darker purple == partner doesn't know
-		document.getElementById("ifWall").innerHTML = "<b>Your partner does NOT know the number of bananas and scorpions that are here.</b>";
-		ctx.fillStyle = "#c7bad4";
-	}
-	ctx.fillRect(0, 0, w, w);	
-
 
 	// items 1st row: number of pointings
-	drawHand(ctxHand, 0, 0)
+	drawToken(ctxHand, 0, 0)
 	if (tokenNumberFull == 2) {
-		drawHand(ctxHand, square_size, 0)
+		drawToken(ctxHand, square_size, 0)
 	}
 
 	// items 2nd row: partner's hammers
@@ -248,8 +295,7 @@ function generateMap(){
 
 
 	//// Design maps:
-	vers = getRandomInt(6); // randomly generates number from 0-7 for rotations (creates variety)
-
+	
 	/// Maps 1/3/5 (same layout except for Player's position)
 	if (mapNumber == 1 || mapNumber == 3 || mapNumber == 5) {
 
@@ -262,9 +308,9 @@ function generateMap(){
 		p3_y0 = square_size * 4;
 
 		// Box locations: flipped
-		f1_x0 = square_size;
+		f1_x0 = square_size * 4;
 		f1_y0 = square_size * 4;
-		f2_x0 = square_size * 4;
+		f2_x0 = square_size * 1;
 		f2_y0 = square_size * 4;
 		f3_x0 = square_size * 2;
 		f3_y0 = 0;
@@ -564,52 +610,50 @@ function generateMap(){
 	// whether p1 is apple or bee, draw accordingly 
 	if (itemAt_p1 == 1) {
 		drawApple(ctx, p1_x0, p1_y0, square_size);
+		// if there is no wall, display the amounts of rewards
+		if (ifWallFull== 0){
+			drawApple(ctxWall, 0, 0, 1);
+		}
 	}
 	else if (itemAt_p1 == 2) {
 		drawGhost(ctx, p1_x0, p1_y0, square_size);
+		if (ifWallFull== 0){
+			drawGhost(ctxWall, 0, 0, 1);
+		}
 	}
 
 	// p2
 	if (itemAt_p2 == 1) {
 		drawApple(ctx, p2_x0, p2_y0, square_size);
+		if (ifWallFull== 0){
+			drawApple(ctxWall, square_size, 0, 1);
+		}
 	}
 	else if (itemAt_p2 == 2) {
 		drawGhost(ctx, p2_x0, p2_y0, square_size);
+		if (ifWallFull== 0){
+			drawGhost(ctxWall, square_size, 0, 1);
+		}
 	}
 
 	// p3
 	if (itemAt_p3 == 1) {
 		drawApple(ctx, p3_x0, p3_y0, square_size);
+		if (ifWallFull== 0){
+			drawApple(ctxWall, square_size*2, 0, 1);
+		}
 	}
 	else if (itemAt_p3 == 2) {
 		drawGhost(ctx, p3_x0, p3_y0, square_size);
+		if (ifWallFull== 0){
+			drawGhost(ctxWall, square_size*2, 0, 1);
+		}
 	}
 
-	// Player 
-	drawPlayer(ctx, g_x0, g_y0, square_size);
-
-
-
-	// Grid lines (code put after tiles so will be overlayed)
-	ctx.beginPath() 
-	for (let i=0; i<=w; i=i+square_size){
-		//horizontal lines
-		ctx.moveTo(0,i);
-		ctx.lineTo(w,i);
-
-		//vertical lines
-		ctx.moveTo(i,0);
-		ctx.lineTo(i,w);
-	}
-	ctx.lineWidth = 2;
-	ctx.strokeStyle = "#000000";
-	ctx.stroke();
-	ctx.closePath();
-
-
-
-	// hammer and pointer containers
-	drawItemsGrid(ctxHammer, ctxHand);
+	// hammer, pointer, wall containers
+	drawItemsGrid(ctxHammer);
+	drawItemsGrid(ctxHand);
+	drawItemsGrid(ctxWall);
 	
 	// Player's role:
 	pointPurple(p1_x0, p1_y0, p2_x0, p2_y0, p3_x0, p3_y0);
@@ -620,8 +664,6 @@ function generateMap(){
 var onlyOnePurple = new Array ();
 
 function pointPurple(p1_x0, p1_y0, p2_x0, p2_y0, p3_x0, p3_y0){
-
-	var mapNumber         = trials[counter][0]; // a number from 1-8
 
 	// Message to point
 	document.getElementById("pleasePoint").hidden = false;
@@ -671,7 +713,10 @@ function pointPurple(p1_x0, p1_y0, p2_x0, p2_y0, p3_x0, p3_y0){
 	});
 
 	// Monitor when click on a purple box 
-	elem.addEventListener('click', handler); //**true makes it ask only once
+	elem.addEventListener('click', handler); 
+
+	// RT from after display boxes
+	start_time = Date.now();
 }
 
 
@@ -685,12 +730,6 @@ var doubleArray = new Array();
 // Function for when click on an item
 var handler = function(event) {
 
-	// // this shouldn't come up anymore since going straight to confidence
-	// if (onlyOnePurple[counter] == 1){
-	// 	alert("You have already made your selection. Please click next.");
-	// 	return;
-	// }
-
 	var tokenNumberFull   = trials[counter][1][0]; // either 1 or 2
 
 	// Record both selections if have 2 tokens
@@ -699,6 +738,18 @@ var handler = function(event) {
 			doubleArray[counter] = new Array();
 		}
 	}
+
+	// Need to know to what the token is being placed on
+	var rewardNumber      = trials[counter][1][3]; // either 1 or 2
+	if (rewardNumber == 1){ // one banana
+		var itemsConfigFull =  [1, 2, 2]; // BSS
+	}
+	else { // two bananas
+		var itemsConfigFull =  [1, 1, 2]; // BBS
+	}
+	itemAt_p1 = itemsConfigFull[0];
+	itemAt_p2 = itemsConfigFull[1];
+	itemAt_p3 = itemsConfigFull[2];
 
 	// x and y are the coordinates of where the mouse clicked; given page and canvas
 	var x = event.pageX - elemLeft,
@@ -720,52 +771,73 @@ var handler = function(event) {
 				 
 				 // First click:
 				 if (clickIndex == 0){
-					 // Show them what they clicked 
-					 ctx.beginPath();
-					 ctx.strokeStyle = "#FFBD21";
-					 ctx.lineWidth = 8;
+					 // First click, place a token on what they chose
 					 if (element.name == "p1"){
-						 ctx.strokeRect(p1_x0, p1_y0, square_size, square_size);
-					 }
- 
-					 else if (element.name == "p2"){
-						 ctx.strokeRect(p2_x0, p2_y0, square_size, square_size);
-					 }
- 
-					 else if (element.name == "p3"){
-						 ctx.strokeRect(p3_x0, p3_y0, square_size, square_size);
-					 }
-					 ctx.closePath();
+						// To do so, redraw the box, but with the token on top (send function item = 2)
+                        if (itemAt_p1 == 1) {
+							drawApple(ctx, p1_x0, p1_y0, 2);
+						}
+						else if (itemAt_p1 == 2) {
+							drawGhost(ctx, p1_x0, p1_y0, 2);
+						}
+                    }
+
+                    else if (element.name == "p2"){
+                        if (itemAt_p2 == 1) {
+							drawApple(ctx, p2_x0, p2_y0, 2);
+						}
+						else if (itemAt_p2 == 2) {
+							drawGhost(ctx, p2_x0, p2_y0, 2);
+						}
+                    }
+
+                    else if (element.name == "p3"){
+                       if (itemAt_p3 == 1) {
+							drawApple(ctx, p3_x0, p3_y0, 2);
+						}
+						else if (itemAt_p3 == 2) {
+							drawGhost(ctx, p3_x0, p3_y0, 2);
+						}
+                    }
 				 }
 				 
- 
- 
-				 // Process double click 
+				 // Process double click  (NOT USING ANYMORE?)
 				 clickArray[clickIndex] = element.name // save what picked this time 
  
 				 // After first click:
 				 if (tokenNumberFull == 1){
-					// Erase what previously clicked 
+					// Since can only choose one in this cond, erase what they previously clicked 
 					resetMap();
 					confirmIndex++;
 					zeroIndex++;
 
-					// Highlight what they clicked NOW
-					ctx.beginPath();
-					ctx.strokeStyle = "#FFBD21";
-					ctx.lineWidth = 8;
-					if (element.name == "p1"){
-						ctx.strokeRect(p1_x0, p1_y0, square_size, square_size);
-					}
+					// Place token on what clicked now
+                     if (element.name == "p1"){
+                        if (itemAt_p1 == 1) {
+							drawApple(ctx, p1_x0, p1_y0, 2);
+						}
+						else if (itemAt_p1 == 2) {
+							drawGhost(ctx, p1_x0, p1_y0, 2);
+						}
+                    }
 
-					else if (element.name == "p2"){
-						ctx.strokeRect(p2_x0, p2_y0, square_size, square_size);
-					}
+                    else if (element.name == "p2"){
+                        if (itemAt_p2 == 1) {
+							drawApple(ctx, p2_x0, p2_y0, 2);
+						}
+						else if (itemAt_p2 == 2) {
+							drawGhost(ctx, p2_x0, p2_y0, 2);
+						}
+                    }
 
-					else if (element.name == "p3"){
-						ctx.strokeRect(p3_x0, p3_y0, square_size, square_size);
-					}
-					ctx.closePath();
+                    else if (element.name == "p3"){
+                        if (itemAt_p3 == 1) {
+							drawApple(ctx, p3_x0, p3_y0, 2);
+						}
+						else if (itemAt_p3 == 2) {
+							drawGhost(ctx, p3_x0, p3_y0, 2);
+						}
+                    }
 
 					// Record what selected
 					recordSelections(element.name);
@@ -775,22 +847,33 @@ var handler = function(event) {
 				// If have 2 tokens:
 				else{
 					if (clickIndex < 2) {
-						// Highlight what they clicked NOW
-						ctx.beginPath();
-						ctx.strokeStyle = "#FFBD21";
-						ctx.lineWidth = 8;
+						// Can click up to, but no more than, 2
 						if (element.name == "p1"){
-							ctx.strokeRect(p1_x0, p1_y0, square_size, square_size);
+							if (itemAt_p1 == 1) {
+								drawApple(ctx, p1_x0, p1_y0, 2);
+							}
+							else if (itemAt_p1 == 2) {
+								drawGhost(ctx, p1_x0, p1_y0, 2);
+							}
 						}
 
 						else if (element.name == "p2"){
-							ctx.strokeRect(p2_x0, p2_y0, square_size, square_size);
+							if (itemAt_p2 == 1) {
+								drawApple(ctx, p2_x0, p2_y0, 2);
+							}
+							else if (itemAt_p2 == 2) {
+								drawGhost(ctx, p2_x0, p2_y0, 2);
+							}
 						}
 
 						else if (element.name == "p3"){
-							ctx.strokeRect(p3_x0, p3_y0, square_size, square_size);
+							if (itemAt_p3 == 1) {
+								drawApple(ctx, p3_x0, p3_y0, 2);
+							}
+							else if (itemAt_p3 == 2) {
+								drawGhost(ctx, p3_x0, p3_y0, 2);
+							}
 						}
-						ctx.closePath();
 
 						// Record both selections
 						doubleArray[counter].push(element.name);
@@ -812,40 +895,6 @@ var handler = function(event) {
  }; 
 
 
-const reward_size = square_size; // made a little smaller and moved over so won't cover grid lines
-const box_size = square_size - 10; 
-
-function drawApple(ctx, p_x0, p_y0, square_size){
-	box_img = new Image();
-	box_img.src = 'img/drkbrown_box.png';
-	box_img.onload = function(){
-		ctx.drawImage(box_img, p_x0+5, p_y0+5, box_size, box_size);
-
-		apple_image = new Image();
-		apple_image.src = 'img/banana.png';
-		apple_image.onload = function(){
-			ctx.imageSmoothingEnabled = false;
-			ctx.drawImage(apple_image, p_x0+5, p_y0+11, reward_size, reward_size-3);
-		}	
-	}
-}
-
-
-function drawGhost(ctx, p_x0, p_y0, square_size){
-	box_img = new Image();
-	box_img.src = 'img/drkbrown_box.png';
-	box_img.onload = function(){
-		ctx.drawImage(box_img, p_x0+5, p_y0+5, box_size, box_size);
-	
-		bee_image = new Image();
-		bee_image.src = 'img/pink_scorpion2.png';
-		bee_image.onload = function(){
-			ctx.drawImage(bee_image, p_x0+15, p_y0+27, reward_size-37, reward_size-37);
-		}
-	}
-}
-
-
 function confirm(){
 	var elem = document.getElementById("myGrid");
 
@@ -858,6 +907,9 @@ function confirm(){
     }
 
     else {
+		// Store reaction time up to when pressed confirm
+		react_time = Date.now()-start_time;
+		document.getElementById("rt").value = react_time;
 
 		// If still didn't select anything
 		if (zeroIndex == 0) {
@@ -865,8 +917,7 @@ function confirm(){
 			recordSelections("zero");
 		}
 
-		// Hide confirm button, hide instructions
-		document.getElementById("pleasePoint").hidden = true;
+		// Hide buttons
 		document.getElementById("confirm").hidden = true;
 		document.getElementById("resetBox").hidden = true;
 
@@ -887,9 +938,6 @@ function checkConfidence(){
 	var resBox = document.getElementById("resultRate");
 	resBox.style.display = "block";
 
-	// Hide Next
-	// document.getElementById("expNext").hidden = true;
-
 	// Add confirm button to it.
 	document.getElementById("Confirm").hidden = false;
 
@@ -897,6 +945,7 @@ function checkConfidence(){
 
 
 function postConfirm(){
+	
 	// Listen to Confirm button
 	var confSelected = document.getElementsByName("ConfidenceScale");
 	let selectedRating;
@@ -959,7 +1008,8 @@ function postConfirm(){
 
 		// Otherwise, generate next map
 		else {
-			generateMap();
+			// generateMap();
+			drawMovement();
 		}
 	}
 
@@ -982,10 +1032,7 @@ function resetMap(){
 	zeroIndex = 0;
 
     var mapNumber         = trials[counter][0]; // a number from 1-8
-	//var itemsConfigFull   = trials[counter][1]; // an array of 2 ones and 1 two
 	var tokenNumberFull   = trials[counter][1][0]; // either 1 or 2
-	var axNumberFull      = trials[counter][1][1]; // either 1 or 2
-	var ifWallFull        = trials[counter][1][2]; // either 0 or 1
 	var rewardNumber      = trials[counter][1][3]; // either 1 or 2
 
 	// Make item placements based on how many rewards there are
@@ -1003,37 +1050,27 @@ function resetMap(){
 	}
 	
 
-	//Clear canvas each time gen map 
+	// Clear and repaint canvas each time gen map: always light blue
 	ctx.clearRect(0, 0, w, w); 
-
-	// Fill in canvas based on if there is a wall or not
-	if (ifWallFull == 0){
-		// light blue == partner knows
-		document.getElementById("ifWall").innerHTML = "<b>Your partner KNOWS the number of bananas and scorpions that are here.</b>";
-		ctx.fillStyle = "#dde7f0";
-	}
-	else {
-		// darker purple == partner doesn't know
-		document.getElementById("ifWall").innerHTML = "<b>Your partner does NOT know the number of bananas and scorpions that are here.</b>";
-		ctx.fillStyle = "#c7bad4";
-	}
-	ctx.fillRect(0, 0, w, w);
+	ctx.fillStyle = "#dde7f0";
+	ctx.fillRect(0, 0, w, w);	
+	
 
 	/// Maps 1/3/5 (same layout except for Player's position)
 	if (mapNumber == 1 || mapNumber == 3 || mapNumber == 5) {
 
 		// Box locations: originally
-		p1_x0 = square_size * 3;
+		p1_x0 = 0;
 		p1_y0 = square_size * 4;
-		p2_x0 = 0;
-		p2_y0 = square_size * 4;
-		p3_x0 = square_size * 2;
-		p3_y0 = 0;
+		p2_x0 = square_size * 2;
+		p2_y0 = 0;
+		p3_x0 = square_size * 3;
+		p3_y0 = square_size * 4;
 
 		// Box locations: flipped
-		f1_x0 = square_size;
+		f1_x0 = square_size * 4;
 		f1_y0 = square_size * 4;
-		f2_x0 = square_size * 4;
+		f2_x0 = square_size * 1;
 		f2_y0 = square_size * 4;
 		f3_x0 = square_size * 2;
 		f3_y0 = 0;
@@ -1373,39 +1410,4 @@ function resetMap(){
 	ctx.strokeStyle = "#000000";
 	ctx.stroke();
 	ctx.closePath();
-}
-
-
-function afterAttend(){
-	// Close attention check 
-	var attentionPage = document.getElementById("attentionCheck");
-	attentionPage.style.display = "none";
-
-	// Show formal page
-	var expPage = document.getElementById("formalPage");
-	expPage.style.display = "block";
-
-	// Continue experiment
-	generateMap();
-
-}
-
-
-function namingFunc(){
-	// Save username as variable 
-	var playername = document.getElementById("username").value;
-
-	// If not at least 3 characters, alert
-	if (playername.length < 3){
-		alert("Your username is too short. Please make it at least 3 characters.")
-	}
-	else{
-		// When done, close this window to move on to instructions
-		var windBoxInstr = document.getElementById("windowBoxInstr");
-		windBoxInstr.style.display = "none";
-		var nameDisplay = document.getElementById("namingDisplay");
-		nameDisplay.style.display = "none";
-	}
-
-	// check if used before??
 }
