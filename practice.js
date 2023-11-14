@@ -1,3 +1,5 @@
+//////SPECIFIC TO THE PRACTICE ROUNDS
+
 document.write(
     unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E")
   );
@@ -57,21 +59,77 @@ for(var i = 0; i < amountPrac; i++){
 		numbAxes++
 	}
 
-	else {
-		numbTokens++
-	}
+	// different for practice
 	
 }
 
 
-
-
-///// 7 maps; different red/purple configurations
 var ctxPrac = document.getElementById("myGridPrac").getContext("2d"); //canvas
-
-// Each time clicks next, generates different map
 var counterPrac = -1 // starts at -1 for each user
+var start_timePrac = 0; // global var
+
+/// Start animation
+async function drawMovementPrac() {
+	
+	// Remove  confidence rating question
+	var windBoxPrac = document.getElementById("windowBoxPrac");
+	windBoxPrac.style.display = "none";
+	var resBoxPrac = document.getElementById("resultRatePrac");
+	resBoxPrac.style.display = "none";
+
+	// Clear cond canvases
+	ctx2.clearRect(0, 0, 300, 100); 
+	ctx3.clearRect(0, 0, 300, 100); 
+	ctx4.clearRect(0, 0, 300, 100); 
+
+	// Put instructions line so map doesn't move
+	document.getElementById("pleasePointPrac").innerHTML = "Your partner is entering the map. . .";
+    document.getElementById("pleasePointPrac").style.color = "black";
+
+	// Update global counter
+	counterPrac++
+	if (counterPrac > trialsPrac.length){
+		return 
+	}
+
+	// Find map number on
+	var mapNumberPrac = trialsPrac[counterPrac][0]; 
+
+	// Set animation positions for each map: array of tiles will walk on
+	if (mapNumberPrac == 1) {
+		walkInPrac = [[0, 0], [square_size, 0], [square_size*2, 0]]
+	}
+	else if (mapNumberPrac == 2) {
+		walkInPrac = [[square_size*4, square_size*4], [square_size*3, square_size*4], [square_size*2, square_size*4]]
+	}
+	else if (mapNumberPrac == 3) {
+		walkInPrac = [[square_size*3, square_size*0], [square_size*3, square_size*1], [square_size*3, square_size*2]]
+	}
+
+	// Create animation
+	var space     = 3; // number of spaces will walk
+	var countWalk = 0; // counter for tile positions array
+	while (space>0){
+		// Redraw canvas, draw Player, delay, redo
+		rawCanvas(ctxPrac);
+		ctxPrac.drawImage(playerMove, walkInPrac[countWalk][0]+30, walkInPrac[countWalk][1]+20, player_size-20, player_size);
+		await sleep(500);
+		space -= 1;
+		countWalk++;
+	}
+
+	// Once finished walking amount of spaces, show boxes and watch for clicks
+	generateMapPrac();
+}
+
+
+  
+// Each time clicks next, generates different map
 function generateMapPrac(){
+
+	// Bring buttons back
+	document.getElementById("resetBoxPrac").hidden = false;
+	document.getElementById("confirmPrac").hidden = false;
 
     // Reset instructions 
     document.getElementById("pleasePointPrac").innerHTML = "Click on the box(es) that you wish to highlight for your partner.";
@@ -80,52 +138,36 @@ function generateMapPrac(){
     clickIndexPrac = 0; // reset every trial (for purplePoint)
     zeroIndexPrac = 0;
 
-	// Can't click next yet, but can choose zero
-	document.getElementById("resetBoxPrac").hidden = false;
-	document.getElementById("confirmPrac").hidden = false;
-
-	// Reomve  confidence rating question
-	var windBoxPrac = document.getElementById("windowBoxPrac");
-	windBoxPrac.style.display = "none";
-	var resBoxPrac = document.getElementById("resultRatePrac");
-	resBoxPrac.style.display = "none";
-
-	// Adjust counter, maps, configurations
-	counterPrac++
-	if (counterPrac > trialsPrac.length){
-		return 
-	}
 	var mapNumberPrac = trialsPrac[counterPrac][0]; // a number from 1-7
-	var itemsConfig   = trialsPrac[counterPrac][1]; // an array of 2 ones and 1 two
 	var tokenNumber   = trialsPrac[counterPrac][2]; // either 1 or 2
 	var axNumber      = trialsPrac[counterPrac][3]; // either 1 or 2
 	var ifWall        = trialsPrac[counterPrac][4]; // either 0 or 1
 
+	var rewardNumberPrac = [1, 2, 2]; // manual for now
 
-	// Clear canvas each time gen map
-	ctxPrac.clearRect(0, 0, w, w); 
-	
-	// Fill in canvas based on if there is a wall or not
-	if (ifWall == 0){
-		// light blue == partner knows
-		document.getElementById("ifWallPrac").innerHTML = "<b>Your partner KNOWS the number of bananas and scorpions that are here.</b>";
-		ctxPrac.fillStyle = "#dde7f0";
+	// Make item placements based on how many rewards there are
+	if (rewardNumberPrac[counterPrac] == 1){ // one banana
+		var itemsConfig =  [1, 2, 2]; // BSS (player will move around rather than boxes)
 	}
-	else {
-		// darker purple == partner doesn't know
-		document.getElementById("ifWallPrac").innerHTML = "<b>Your partner does NOT know the number of bananas and scorpions that are here.</b>";
-		ctxPrac.fillStyle = "#c7bad4";
+	else { // two bananas
+		var itemsConfig =  [1, 1, 2]; // BBS
 	}
-	ctxPrac.fillRect(0, 0, w, w);	
 
 
-	// items 1st row: number of pointings
-	drawHand(ctx3, 0, 0)
+	// If there's a wall, add question marks (will add items later)
+	if (ifWall == 1){
+		drawQuestion(ctx4, 0, 0)
+		drawQuestion(ctx4, square_size, 0)
+		drawQuestion(ctx4, square_size*2, 0)
+	}
+
+	// your items: pointings
+	drawToken(ctx3, 0, 0)
 	if (tokenNumber == 2) {
-		drawHand(ctx3, square_size, 0)
+		drawToken(ctx3, square_size, 0)
 	}
 
-	// items 2nd row: partner's hammers
+	// partner's items: hammers
 	drawHammer(ctx2, 0, 0)
 	if (axNumber ==2){
 		drawHammer(ctx2, square_size, 0)
@@ -246,63 +288,59 @@ function generateMapPrac(){
 
 
 
+
 	// Apples & Bees images (randomized p's config equally before)
 	// var itemsConfig = trials[counter][1]; // an array of 2 ones and 1 two
-	itemAt_p1 = itemsConfig[0];
-	itemAt_p2 = itemsConfig[1];
-	itemAt_p3 = itemsConfig[2];
+	itemAt_p1Prac = itemsConfig[0];
+	itemAt_p2Prac = itemsConfig[1];
+	itemAt_p3Prac = itemsConfig[2];
 
 	// whether p1 is apple or bee, draw accordingly 
-	if (itemAt_p1 == 1) {
+	if (itemAt_p1Prac == 1) {
 		drawApple(ctxPrac, p1_x0, p1_y0, square_size);
+		if (ifWall == 0){
+			drawApple(ctx4, 0, 0, 1);
+		}
 	}
-	else if (itemAt_p1 == 2) {
+	else if (itemAt_p1Prac == 2) {
 		drawGhost(ctxPrac, p1_x0, p1_y0, square_size);
+		if (ifWall == 0){
+			drawGhost(ctx4, 0, 0, 1);
+		}
 	}
 
 	// p2
-	if (itemAt_p2 == 1) {
+	if (itemAt_p2Prac == 1) {
 		drawApple(ctxPrac, p2_x0, p2_y0, square_size);
+		if (ifWall == 0){
+			drawApple(ctx4, square_size, 0, 1);
+		}
 	}
-	else if (itemAt_p2 == 2) {
+	else if (itemAt_p2Prac == 2) {
 		drawGhost(ctxPrac, p2_x0, p2_y0, square_size);
+		if (ifWall == 0){
+			drawGhost(ctx4, square_size, 0, 1);
+		}
 	}
 
 	// p3
-	if (itemAt_p3 == 1) {
+	if (itemAt_p3Prac == 1) {
 		drawApple(ctxPrac, p3_x0, p3_y0, square_size);
+		if (ifWall == 0){
+			drawApple(ctx4, square_size*2, 0, 1);
+		}
 	}
-	else if (itemAt_p3 == 2) {
+	else if (itemAt_p3Prac == 2) {
 		drawGhost(ctxPrac, p3_x0, p3_y0, square_size);
+		if (ifWall == 0){
+			drawGhost(ctx4, square_size*2, 0, 1);
+		}
 	}
-
-
-	// Player 
-	var g_x0 = square_size * 2;
-	var g_y0 = square_size * 4;
-	drawPlayer(ctxPrac, g_x0, g_y0, square_size);
-
-
-	// Grid lines (code put after tiles so will be overlayed)
-	ctxPrac.beginPath() 
-	for (let i=0; i<=w; i=i+square_size){
-		//horizontal lines
-		ctxPrac.moveTo(0,i);
-		ctxPrac.lineTo(w,i);
-
-		//vertical lines
-		ctxPrac.moveTo(i,0);
-		ctxPrac.lineTo(i,w);
-	}
-	ctxPrac.lineWidth = 2;
-	ctxPrac.strokeStyle = "#000000";
-	ctxPrac.stroke();
-	ctxPrac.closePath();
-
-
 
 	// hammer and pointer containers
-	drawItemsGrid(ctx2, ctx3);
+	drawItemsGrid(ctx2);
+	drawItemsGrid(ctx3);
+	drawItemsGrid(ctx4);
 	
 
 	// Player's role:
@@ -471,6 +509,8 @@ function pointPurplePrac(){
 	// Monitor when click on a purple box 
 	elem.addEventListener('click', handlerPrac); //**true makes it ask only once
 
+	// RT from after display boxes
+	start_timePrac = Date.now();
 }
 
 // Need to track double clicks
@@ -481,6 +521,20 @@ var clickIndexPrac = 0; // check if clicked the same item as the prev index
 var handlerPrac = function(event) {
 
 	var tokenNumber   = trialsPrac[counterPrac][2]; // either 1 or 2
+
+	// Redrawing box with a token on top (to control the order in which the images load)
+	var rewardNumberPrac = [1, 2, 2]; // manual for now
+	if (rewardNumberPrac[counterPrac] == 1){ // one banana
+		var itemsConfig =  [1, 2, 2]; // BSS (player will move around rather than boxes)
+	}
+	else { // two bananas
+		var itemsConfig =  [1, 1, 2]; // BBS
+	}
+
+	itemAt_p1Prac = itemsConfig[0];
+	itemAt_p2Prac = itemsConfig[1];
+	itemAt_p3Prac = itemsConfig[2];
+
 
 	// x and y are the coordinates of where the mouse clicked; given page and canvas
 	var x = event.pageX - elemLeft,
@@ -499,70 +553,102 @@ var handlerPrac = function(event) {
 				document.getElementById("pleasePointPrac").style.color = "#911879";
 
                 if (clickIndexPrac == 0){
-                    // Show them what they clicked 
-                    ctxPrac.beginPath();
-                    ctxPrac.strokeStyle = "#FFBD21";
-                    ctxPrac.lineWidth = 8;
+                    // First click, place a token on what they chose
                     if (element.name == "p1"){
-                        ctxPrac.strokeRect(p1_x0, p1_y0, square_size, square_size);
+						// To do so, redraw the box, but with the token on top (send function item = 2)
+                        if (itemAt_p1Prac == 1) {
+							drawApple(ctxPrac, p1_x0, p1_y0, 2);
+						}
+						else if (itemAt_p1Prac == 2) {
+							drawGhost(ctxPrac, p1_x0, p1_y0, 2);
+						}
                     }
 
                     else if (element.name == "p2"){
-                        ctxPrac.strokeRect(p2_x0, p2_y0, square_size, square_size);
+                        if (itemAt_p2Prac == 1) {
+							drawApple(ctxPrac, p2_x0, p2_y0, 2);
+						}
+						else if (itemAt_p2Prac == 2) {
+							drawGhost(ctxPrac, p2_x0, p2_y0, 2);
+						}
                     }
 
                     else if (element.name == "p3"){
-                        ctxPrac.strokeRect(p3_x0, p3_y0, square_size, square_size);
+                       if (itemAt_p3Prac == 1) {
+							drawApple(ctxPrac, p3_x0, p3_y0, 2);
+						}
+						else if (itemAt_p3Prac == 2) {
+							drawGhost(ctxPrac, p3_x0, p3_y0, 2);
+						}
                     }
-                    ctxPrac.closePath();
                 }
                 
-
-
-                // Process double click 
+                // Process double click (NOT USING ANYMORE?)
                 clickArrayPrac[clickIndexPrac] = element.name // save what picked this time 
 
 				if (tokenNumber == 1){
-					// Erase what previously clicked 
+					// Since can only choose one in this cond, erase what they previously clicked 
 					resetMapPrac();
 					zeroIndexPrac++;
 
-					// Highlight what they clicked NOW
-					ctxPrac.beginPath();
-					ctxPrac.strokeStyle = "#FFBD21";
-					ctxPrac.lineWidth = 8;
-					if (element.name == "p1"){
-						ctxPrac.strokeRect(p1_x0, p1_y0, square_size, square_size);
-					}
+					// Place token on what clicked now
+                     if (element.name == "p1"){
+                        if (itemAt_p1Prac == 1) {
+							drawApple(ctxPrac, p1_x0, p1_y0, 2);
+						}
+						else if (itemAt_p1Prac == 2) {
+							drawGhost(ctxPrac, p1_x0, p1_y0, 2);
+						}
+                    }
 
-					else if (element.name == "p2"){
-						ctxPrac.strokeRect(p2_x0, p2_y0, square_size, square_size);
-					}
+                    else if (element.name == "p2"){
+                        if (itemAt_p2Prac == 1) {
+							drawApple(ctxPrac, p2_x0, p2_y0, 2);
+						}
+						else if (itemAt_p2Prac == 2) {
+							drawGhost(ctxPrac, p2_x0, p2_y0, 2);
+						}
+                    }
 
-					else if (element.name == "p3"){
-						ctxPrac.strokeRect(p3_x0, p3_y0, square_size, square_size);
-					}
-					ctxPrac.closePath();
+                    else if (element.name == "p3"){
+                        if (itemAt_p3Prac == 1) {
+							drawApple(ctxPrac, p3_x0, p3_y0, 2);
+						}
+						else if (itemAt_p3Prac == 2) {
+							drawGhost(ctxPrac, p3_x0, p3_y0, 2);
+						}
+                    }
 				}
 
 				else{
 					if (clickIndexPrac < 2) {
-						// Highlight what they clicked NOW
-						ctxPrac.beginPath();
-						ctxPrac.strokeStyle = "#FFBD21";
-						ctxPrac.lineWidth = 8;
+						// Here, can click up to, but no more than, 2
 						if (element.name == "p1"){
-							ctxPrac.strokeRect(p1_x0, p1_y0, square_size, square_size);
+							if (itemAt_p1Prac == 1) {
+								drawApple(ctxPrac, p1_x0, p1_y0, 2);
+							}
+							else if (itemAt_p1Prac == 2) {
+								drawGhost(ctxPrac, p1_x0, p1_y0, 2);
+							}
 						}
 
 						else if (element.name == "p2"){
-							ctxPrac.strokeRect(p2_x0, p2_y0, square_size, square_size);
+							if (itemAt_p2Prac == 1) {
+								drawApple(ctxPrac, p2_x0, p2_y0, 2);
+							}
+							else if (itemAt_p2Prac == 2) {
+								drawGhost(ctxPrac, p2_x0, p2_y0, 2);
+							}
 						}
 
 						else if (element.name == "p3"){
-							ctxPrac.strokeRect(p3_x0, p3_y0, square_size, square_size);
+							if (itemAt_p3Prac == 1) {
+								drawApple(ctxPrac, p3_x0, p3_y0, 2);
+							}
+							else if (itemAt_p3Prac == 2) {
+								drawGhost(ctxPrac, p3_x0, p3_y0, 2);
+							}
 						}
-						ctxPrac.closePath();
 					}
 
 					else {
@@ -591,11 +677,14 @@ function confirmPrac(){
 
     // Second time clicking:
     else {
+
+		// Store reaction time up to when pressed confirm
+		react_timePrac = Date.now()-start_timePrac;
+
         // Record the data 
 		recordSelectionsPrac("zero");
 
-		// Hide confirm button and instructions
-		document.getElementById("pleasePointPrac").hidden = true;
+		// Hide buttons
 		document.getElementById("resetBoxPrac").hidden = true;
 		document.getElementById("confirmPrac").hidden = true;
 		
@@ -617,9 +706,6 @@ function checkConfidencePrac(){
 	var resBoxPrac = document.getElementById("resultRatePrac");
 	resBoxPrac.style.display = "block";
 
-	// Hide Next
-	// document.getElementById("expNextPrac").hidden = true;
-
 	// Add confirm button to it.
 	document.getElementById("ConfirmPrac").hidden = false;
 
@@ -627,6 +713,7 @@ function checkConfidencePrac(){
 
 
 function postConfirmPrac(){
+	
 	// Listen to Confirm button
 	var confSelected = document.getElementsByName("ConfidenceScale");
 	let selectedRating;
@@ -652,6 +739,7 @@ function postConfirmPrac(){
 		alert("Please choose a rating first!")
 	}
 	else{
+
 		
 		// If on last trial
 		if (counterPrac == trialsPrac.length-1) {
@@ -666,7 +754,8 @@ function postConfirmPrac(){
 		}
 		// Otherwise, generate next map
 		else {
-			generateMapPrac();
+			// generateMapPrac();
+			drawMovementPrac();
 		}
 	}
 
@@ -688,26 +777,21 @@ function resetMapPrac(){
 	clickIndexPrac = 0;
 
     var mapNumberPrac = trialsPrac[counterPrac][0]; // a number from 1-7
-	var itemsConfig   = trialsPrac[counterPrac][1]; // an array of 2 ones and 1 two
-	var ifWall        = trialsPrac[counterPrac][4]; // either 0 or 1
+	var rewardNumberPrac = [1, 2, 2]; // manual for now
 
+	// Make item placements based on how many rewards there are
+	if (rewardNumberPrac[counterPrac] == 1){ // one banana
+		var itemsConfig =  [1, 2, 2]; // BSS (player will move around rather than boxes)
+	}
+	else { // two bananas
+		var itemsConfig =  [1, 1, 2]; // BBS
+	}
 
-	// Clear canvas each time gen map
+	// Clear and redo canvas each time gen map: always light blue
 	ctxPrac.clearRect(0, 0, w, w); 
+	ctxPrac.fillStyle = "#dde7f0";
+	ctxPrac.fillRect(0, 0, w, w);	
 	
-	// Fill in canvas based on if there is a wall or not
-	if (ifWall == 0){
-		// light blue == partner knows
-		document.getElementById("ifWallPrac").innerHTML = "<b>Your partner KNOWS the number of bananas and scorpions that are here.</b>";
-		ctxPrac.fillStyle = "#dde7f0";
-	}
-	else {
-		// darker purple == partner doesn't know
-		document.getElementById("ifWallPrac").innerHTML = "<b>Your partner does NOT know the number of bananas and scorpions that are here.</b>";
-		ctxPrac.fillStyle = "#c7bad4";
-	}
-	ctxPrac.fillRect(0, 0, w, w);
-
 
 	/// Map 1: 
 	if (mapNumberPrac == 1) {
@@ -828,39 +912,49 @@ function resetMapPrac(){
 
 	// Apples & Bees images (randomized p's config equally before)
 	// var itemsConfig = trials[counter][1]; // an array of 2 ones and 1 two
-	itemAt_p1 = itemsConfig[0];
-	itemAt_p2 = itemsConfig[1];
-	itemAt_p3 = itemsConfig[2];
+	itemAt_p1Prac = itemsConfig[0];
+	itemAt_p2Prac = itemsConfig[1];
+	itemAt_p3Prac = itemsConfig[2];
 
 	// whether p1 is apple or bee, draw accordingly 
-	if (itemAt_p1 == 1) {
+	if (itemAt_p1Prac == 1) {
 		drawApple(ctxPrac, p1_x0, p1_y0, square_size);
 	}
-	else if (itemAt_p1 == 2) {
+	else if (itemAt_p1Prac == 2) {
 		drawGhost(ctxPrac, p1_x0, p1_y0, square_size);
 	}
 
 	// p2
-	if (itemAt_p2 == 1) {
+	if (itemAt_p2Prac == 1) {
 		drawApple(ctxPrac, p2_x0, p2_y0, square_size);
 	}
-	else if (itemAt_p2 == 2) {
+	else if (itemAt_p2Prac == 2) {
 		drawGhost(ctxPrac, p2_x0, p2_y0, square_size);
 	}
 
 	// p3
-	if (itemAt_p3 == 1) {
+	if (itemAt_p3Prac == 1) {
 		drawApple(ctxPrac, p3_x0, p3_y0, square_size);
 	}
-	else if (itemAt_p3 == 2) {
+	else if (itemAt_p3Prac == 2) {
 		drawGhost(ctxPrac, p3_x0, p3_y0, square_size);
 	}
 
 
-	// Player starts
-	var g_x0 = square_size * 2;
-	var g_y0 = square_size * 4;
-	drawPlayer(ctxPrac, g_x0, g_y0, square_size);
+	// Player position
+	if (mapNumberPrac==1){
+		var g_x0 = square_size*2;
+		var g_y0 = 0;
+	}
+	else if (mapNumberPrac == 2){
+		var g_x0 = square_size*2;
+		var g_y0 = square_size*4;
+	}
+	else if (mapNumberPrac == 3){
+		var g_x0 = square_size*2;
+		var g_y0 = 0;
+	}
+	drawPlayer(ctxPrac, g_x0, g_y0);
 
 
 	// Grid lines (code put after tiles so will be overlayed)
