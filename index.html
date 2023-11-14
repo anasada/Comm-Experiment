@@ -27,7 +27,7 @@
 		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="recView"><div class="optionText">If your partner collects bananas, you will GAIN points. If they collect scorpions, you will LOSE points.</div></div></label>
 		            </div>
 		            <div class='warning' id='instrQWarning1'></div>
-		            <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
+		            <button class="butNext" id="instrQBut1" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
 		        </div>
 		        <div class="pageBox" id="instrQBox2">
 		            <p id="instrQText2">We’re just about to begin! Let's make sure you understand the game first.<br><br>Which of the following is <b>NOT correct</b>?</p>
@@ -38,7 +38,7 @@
 		            <label><div class="option"><input class="optionRadio" type="radio" name="instrQ" value="several"><div class="optionText">The boxes that you select directly represent the points that you will gain.</div></div></label>
 		            </div>
 		            <div class='warning' id='instrQWarning2'></div>
-		            <button class="butNext" id="instrQBut" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
+		            <button class="butNext" id="instrQBut2" onclick="SUBMIT_INSTR_Q()">SUBMIT</button>
 		        </div>
 		        <p id="instrText"></p>
 		        <button class="butNext" id="instrNextBut" onclick="instr.next()" hidden>NEXT</button>
@@ -59,19 +59,20 @@
 		<!--==========Practice Rounds==========-->
 		
 		<div class="pageBox" id="practicePage">
-			<p id="pleasePointPrac" hidden>Click on the box(es) that you wish to highlight for your partner.</p>
-			<p id="ifWallPrac"></p>
+			<p id="pleasePointPrac">Your partner is entering the map...</p>
+			<!-- <p id="ifWallPrac"></p> -->
 			<div id = "playerItem">
-				<p id="partnerItems">Player’s Items: <canvas class = "conditionsGrid" id="canvItemsPrac" width="200" height="100"></canvas></p>
+				<p id="partnerItems"><b>Player’s Items:</b> <canvas class = "conditionsGrid" id="canvItemsPrac" width="200" height="100"></canvas></p>
+				<p id="partnerSight">Knowledge:<canvas class = "conditionsGrid" id="canvWallPrac"  width="300" height="100"></canvas> </p>         
 			</div>
 			<div id = "helperItem">
-				<p id="yourItems">Your Items: <canvas class = "conditionsGrid" id="canvConfigsPrac" width="200" height = "100"></canvas></p>
+				<p id="yourItems"><b>Your Items:</b> <canvas class = "conditionsGrid" id="canvConfigsPrac" width="200" height = "100"></canvas></p>
 			</div>
 			<div class = "canvContainerPrac">
 				<canvas id="myGridPrac" width="500" height="500" ></canvas>
 			</div>
-			<button class = "butBackExp" id = "resetBoxPrac" onclick="resetMapPrac()" >Clear Selections</button> 
-			<button class = "butNextExp" id = "confirmPrac" onclick="confirmPrac()">Confirm Selection</button> 
+			<button class = "butBackExp" id = "resetBoxPrac" onclick="resetMapPrac()" hidden>Clear Selections</button> 
+			<button class = "butNextExp" id = "confirmPrac" onclick="confirmPrac()" hidden>Confirm Selection</button> 
 		</div>
 
 			
@@ -103,18 +104,19 @@
 		<!--==========Formal Experiments==========-->
 		<div class="pageBox" id="formalPage">
 			<p id="pleasePoint" hidden>Click on the box(es) that you wish to highlight for your partner.</p>
-			<p id="ifWall"></p>
+			<!-- <p id="ifWall"></p> -->
 			<div id = "playerItem">
-				<p id="partnerItems">Player’s Items: <canvas class = "conditionsGrid" id="canvItems" width="200" height="100"></canvas></p>
+				<p id="partnerItems"><b>Player’s Items:</b> <canvas class = "conditionsGrid" id="canvItems" width="200" height="100"></canvas></p>
+				<p id="partnerSight">Knowledge:<canvas class = "conditionsGrid" id="canvWall"  width="300" height="100"></canvas> </p>         
 			</div>
 			<div id = "helperItem">
-				<p id="yourItems">Your Items: <canvas class = "conditionsGrid" id="canvConfigs" width="200" height = "100"></canvas></p>
+				<p id="yourItems"><b>Your Items:</b> <canvas class = "conditionsGrid" id="canvConfigs" width="200" height = "100"></canvas></p>
 			</div>
 			<div class = "canvContainer">
 				<canvas id="myGrid" width="500" height="500" ></canvas>
 			</div>
-			<button class = "butBackExp" id = "resetBox" onclick="resetMap()" >Clear Selections</button> 
-			<button class = "butNextExp" id = "confirm"  onclick="confirm()"  >Confirm Selection</button> 
+			<button class = "butBackExp" id = "resetBox" onclick="resetMap()" hidden>Clear Selections</button> 
+			<button class = "butNextExp" id = "confirm"  onclick="confirm()" hidden >Confirm Selection</button> 
 		</div>
 
 		<div id="windowBox" style="display: none;">
@@ -158,6 +160,7 @@
 			<input type="text" id="walls" name="walls">
 			<input type="text" id="point_to" name="signal">
 			<input type="text" id="conf_rating" name="conf_rating">
+			<input type="text" id="rt" name="rt">
 			<input type="text" id="attention_rt" name="attention_rt">
 		</form>
 
