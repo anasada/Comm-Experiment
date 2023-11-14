@@ -14,18 +14,32 @@ canvas{
 }
 
 .conditionsGrid{
-    top: 50px;
+    top: 40px;
 }
 
 #myGridPrac, #myGrid {
     padding: 0;
-    margin-top: -250px;
+    margin-top: -564px;
     display: block;
     width: 600px;
 }
 
+#partnerItems {
+   margin-top: 10px;
+}
+
+#canvItemsPrac, #canvItems {
+    margin-left: 13px;
+}
+
+#canvWallPrac, #canvWall {
+    margin-top: -15px;
+    margin-left: 5px;
+}
+
 #canvConfigsPrac, #canvConfigs {
-    margin-left: 30px;
+    margin-left: 46px;
+    margin-top: 188px;
 }
 
 /* #helperItem {
@@ -210,10 +224,18 @@ canvas{
 
 .bananaShape {
     position: relative;
-    top: 10px;
-    left: -5px;
-    height: 50px;
+    height: 33px;
+    top: 5px;
     padding: 0px;
+    padding-right: 5px;
+}
+
+.scorpShape{
+    position: relative;
+    height: 37px;
+    top: 5px;
+    padding: 0px;
+    padding-right: 5px;
 }
 
 .hamShape {
@@ -230,27 +252,35 @@ canvas{
     padding-left: 20px;
 }
 
+.outlineShapeKnowledge {
+    margin: auto;
+    display: inline-block;
+    height: 100px;
+    padding-right: 50px;
+}
+
 .outlineShapeHand {
     display: inline-block;
     height: 85px;
-    padding-left: 150px;
+    padding-left: 170px;
     padding-top: 150px;
 }
 
 .outlineShapeLonely {
     position: relative;
-    margin: auto;
     display: block;
+    margin: auto;
     height: 380px;
-    padding-left: 0px;
+    /* padding-left: 410px; */
     top: -200px;
+    /* left: 25%; */
 }
 
 .outlineShapeBuddies {
     margin: auto;
     position: relative;
     display: block;
-    height: 350px;
+    height: 300px;
     text-align: center;
     padding: 10px;
 }
