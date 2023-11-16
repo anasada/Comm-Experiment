@@ -41,7 +41,7 @@ function drawApple(ctx, p_x0, p_y0, item){
 		apple_image = new Image();
 		apple_image.src = 'img/ai_banana.png';
 		apple_image.onload = function(){
-			ctx.imageSmoothingEnabled = false;
+			ctx.imageSmoothingEnabled = true;
 			ctx.drawImage(apple_image, p_x0+7, p_y0+25, item_size+10, item_size-15);
 		}	
 	}
@@ -56,14 +56,15 @@ function drawApple(ctx, p_x0, p_y0, item){
 			apple_image = new Image();
 			apple_image.src = 'img/ai_banana.png';
 			apple_image.onload = function(){
-				ctx.imageSmoothingEnabled = false;
+				ctx.imageSmoothingEnabled = true;
 				ctx.drawImage(apple_image, p_x0+15, p_y0+43, reward_size-30, reward_size-57);
 
 				// then, if selected the box, draw token
 				if (item == 2){
 					token_image = new Image();
-					token_image.src = 'img/silv_token4.png';
+					token_image.src = 'img/aitoken2.png';
 					token_image.onload = function(){
+						ctx.imageSmoothingEnabled = true;
 						ctx.drawImage(token_image, p_x0+20, p_y0+18, reward_size-40, reward_size-40);
 					}	
 				}
@@ -74,6 +75,7 @@ function drawApple(ctx, p_x0, p_y0, item){
 
 
 function drawGhost(ctx, p_x0, p_y0, item){
+	ctx.imageSmoothingEnabled = true;
 
 	if (item == 1){ // for wall, just draw item itself
 		bee_image = new Image();
@@ -98,8 +100,9 @@ function drawGhost(ctx, p_x0, p_y0, item){
 				// then, if selected the box, draw token
 				if (item == 2){
 					token_image = new Image();
-					token_image.src = 'img/silv_token4.png';
+					token_image.src = 'img/aitoken2.png';
 					token_image.onload = function(){
+						ctx.imageSmoothingEnabled = true;
 						ctx.drawImage(token_image, p_x0+20, p_y0+18, reward_size-40, reward_size-40);
 					}	
 				}
@@ -114,7 +117,8 @@ function drawPlayer(ctx, p_x0, p_y0, square_size){
 	player_img = new Image();
 	player_img.src = 'img/person.png';
 	player_img.onload = function(){
-	  ctx.drawImage(player_img, p_x0+30, p_y0+20, player_size-20, player_size);
+		ctx.imageSmoothingEnabled = true;
+		ctx.drawImage(player_img, p_x0+30, p_y0+20, player_size-20, player_size);
   }
 }
 
@@ -125,7 +129,8 @@ function drawHammer(ctx, p_x0, p_y0){
 	hammer_img = new Image();
 	hammer_img.src = 'img/axe2.png';
 	hammer_img.onload = function(){
-	  ctx.drawImage(hammer_img, p_x0+5, p_y0+10, item_size+10, item_size+5);
+		ctx.imageSmoothingEnabled = true;
+	 	ctx.drawImage(hammer_img, p_x0+5, p_y0+10, item_size+10, item_size+5);
   }
 }
 
@@ -143,16 +148,18 @@ function drawQuestion(ctx, p_x0, p_y0){
 	quest_img = new Image();
 	quest_img.src = 'img/question.png';
 	quest_img.onload = function(){
-	  ctx.drawImage(quest_img, p_x0+15, p_y0+15, item_size, item_size);
+		ctx.imageSmoothingEnabled = true;
+		ctx.drawImage(quest_img, p_x0+15, p_y0+15, item_size, item_size);
   }
 }
 
 function drawToken(ctx, p_x0, p_y0){
 	// Draw token
 	tok_img = new Image();
-	tok_img.src = 'img/silv_token4.png';
+	tok_img.src = 'img/aitoken2.png';
 	tok_img.onload = function(){
-	  ctx.drawImage(tok_img, p_x0+15, p_y0+15, item_size, item_size);
+		ctx.imageSmoothingEnabled = true;
+		ctx.drawImage(tok_img, p_x0+15, p_y0+15, item_size, item_size);
   }
 }
 
