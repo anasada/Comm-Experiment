@@ -53,6 +53,7 @@ var trials = new Array();
 var j = 0; // index for conditions
 
 for(var i = 0; i < amountTrials; i++){ 
+	if (j>15){ j = 0;} // loop through the 16
 	trials[i] = new Array();
 
 	// pick a random map for groups 1, 2, and 5
