@@ -114,7 +114,6 @@ var counter = -1 // starts at -1 for each participant
 var vers = 0; // declare so global
 var start_time = 0; // for RT
 
-counter = 39;
 
 /// Start animation
 async function drawMovement() {
