@@ -1,5 +1,9 @@
 /////THE UNIVERSALLY USED FUNCTIONS
 
+document.write(
+    unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E")
+);
+
 var ctx2 = document.getElementById("canvItemsPrac").getContext("2d"); //Partner
 var ctx3 = document.getElementById("canvConfigsPrac").getContext("2d"); //Helper
 var ctx4 = document.getElementById("canvWallPrac").getContext("2d"); //Wall
