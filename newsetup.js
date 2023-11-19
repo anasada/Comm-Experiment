@@ -349,7 +349,7 @@ function afterAttend(){
 	expPage.style.display = "block";
 
 	// Continue experiment
-	generateMap();
+	drawMovement();
 
 }
 
